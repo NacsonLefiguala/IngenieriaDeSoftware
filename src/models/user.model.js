@@ -10,6 +10,14 @@ const userSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
+    rut: {
+      type: String,
+      required: true,
+    },
+    fechaDeNacimiento: {
+      type: Date,
+      required: true,
+    },
     password: {
       type: String,
       required: true,
@@ -23,6 +31,12 @@ const userSchema = new mongoose.Schema(
       {
         type: mongoose.Schema.Types.ObjectId,
         ref: "Role",
+      },
+    ],
+    Domicilios: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Domicilio",
       },
     ],
   },

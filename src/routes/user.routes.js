@@ -11,6 +11,9 @@ const authorizationMiddleware = require("../middlewares/authorization.middleware
 /** Middleware de autenticación */
 const authenticationMiddleware = require("../middlewares/authentication.middleware.js");
 
+/** Middleware de validacion del formato de documento*/
+
+
 /** Instancia del enrutador */
 const router = express.Router();
 
@@ -31,6 +34,7 @@ router.delete(
   authorizationMiddleware.isAdmin,
   usuarioController.deleteUser,
 );
+
 
 // Exporta el enrutador
 module.exports = router;
