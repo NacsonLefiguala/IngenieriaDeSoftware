@@ -1,7 +1,6 @@
 const mongoose = require("mongoose");
 
 const inspectionSchema = new mongoose.Schema({
-  username: { type: String, unique: true, required: true },
   lugar: String,
   fecha: Date,
   observaciones: String,
@@ -16,5 +15,6 @@ const inspectionSchema = new mongoose.Schema({
 const Inspection = mongoose.model("Inspection", inspectionSchema);
 
 module.exports = Inspection;
+
 
 
