@@ -10,6 +10,7 @@ const inspectionSchema = new mongoose.Schema({
     enum: ["en espera", "aprobado", "rechazado"],
     default: "en espera",
   },
+  archivoJPG: String,
 });
 
 const Inspection = mongoose.model("Inspection", inspectionSchema);

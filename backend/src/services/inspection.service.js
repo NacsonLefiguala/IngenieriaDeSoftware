@@ -65,10 +65,31 @@ async function getInspectionsByInspectorId(inspectorId) {
   }
 }
 
+async function uploadJPG(inspectionId, archivoJPG) {
+  try {
+    // Buscar la inspección por el ID y actualizar el campo archivoJPG
+    const inspection = await Inspection.findByIdAndUpdate(
+      { _id: inspectionId },
+      { archivoJPG },
+      { new: true }
+    );
+
+    if (!inspection) {
+      throw new Error("Inspección no encontrada.");
+    }
+
+    return inspection;
+  } catch (error) {
+    throw error;
+  }
+}
+
+
 module.exports = {
   createInspection,
   addObservations,
   changeInspectionStatus,
-  getInspectionsByInspectorId
+  getInspectionsByInspectorId,
+  uploadJPG
 };
 

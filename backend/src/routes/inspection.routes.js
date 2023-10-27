@@ -1,3 +1,32 @@
+const express = require("express");
+const router = express.Router();
+const inspectionController = require("../controllers/inspection.controller");
+const { isInspector } = require("../middlewares/authorization.middleware");
+
+// Rutas
+router.post("/inspections", isInspector, (req, res) => {
+  console.log("Solicitud POST recibida en /inspections");
+  inspectionController.createInspection(req, res);
+});
+
+router.put("/:inspectionId/observations", isInspector, (req, res) => {
+  console.log(`Solicitud PUT recibida en /inspections/${req.params.inspectionId}/observations`);
+  inspectionController.addObservations(req, res);
+});
+
+router.put("/:inspectionId/status", isInspector, (req, res) => {
+  console.log(`Solicitud PUT recibida en /inspections/${req.params.inspectionId}/status`);
+  inspectionController.changeInspectionStatus(req, res);
+});
+
+router.get("/inspector/:inspectorId", isInspector, inspectionController.getInspectionsByInspectorId);
+
+router.post("/:inspectionId/uploadjpg", isInspector, inspectionController.uploadJPG);
+
+module.exports = router;
+
+
+
 /*const express = require("express");
 const router = express.Router();
 const inspectionController = require("../controllers/inspection.controller");
@@ -9,7 +38,7 @@ router.put("/:inspectorId/status", inspectionController.changeInspectionStatus);
 
 module.exports = router;*/
 
-const express = require("express");
+/*////////////////const express = require("express");
 const router = express.Router();
 const inspectionController = require("../controllers/inspection.controller");
 
@@ -34,10 +63,10 @@ router.put("/:inspectionId/status", (req, res) => {
   inspectionController.getInspectionsByInspectorId(req, res);
 });*/
 
-router.get("/inspector/:inspectorId", inspectionController.getInspectionsByInspectorId);
+/*/////////////router.get("/inspector/:inspectorId", inspectionController.getInspectionsByInspectorId);
 //router.get(":inspectorId/inspections", inspectionController.getInspectionsByInspectorId);
 
-module.exports = router;
+module.exports = router;//////////////////*/
 
 
 
