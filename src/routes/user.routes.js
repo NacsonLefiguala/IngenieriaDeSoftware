@@ -11,30 +11,30 @@ const authorizationMiddleware = require("../middlewares/authorization.middleware
 /** Middleware de autenticación */
 const authenticationMiddleware = require("../middlewares/authentication.middleware.js");
 
-/** Middleware de validacion del formato de documento*/
-
-
 /** Instancia del enrutador */
 const router = express.Router();
+
+const formsRoutes = require("./form.routes.js");
 
 // Define el middleware de autenticación para todas las rutas
 router.use(authenticationMiddleware);
 
 // Define las rutas para los usuarios
-router.get("/", usuarioController.getUsers);
+router.get("/", usuarioController.getUsers); // !Al ser usuario puede mostrar admin e inspector :/
 router.post("/", authorizationMiddleware.isAdmin, usuarioController.createUser);
-router.get("/:id", usuarioController.getUserById);
+router.get("/:id", usuarioController.getUserById); // ?Puede acceder un usuario al de otro
 router.put(
   "/:id",
   authorizationMiddleware.isAdmin,
   usuarioController.updateUser,
-);
+);// ?Puede acceder un usuario al de otro
 router.delete(
   "/:id",
   authorizationMiddleware.isAdmin,
   usuarioController.deleteUser,
 );
 
+router.use("/:user/formularioRegularizacion", formsRoutes);
 
 // Exporta el enrutador
 module.exports = router;

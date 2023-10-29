@@ -1,18 +1,15 @@
 "use strict";
 const mongoose = require("mongoose");
 
-const domicilioSchema = new mongoose.Schema(
+const formSchema = new mongoose.Schema(
   {
-    Ciudad: {
+    Nombres: {
       type: String,
       required: true,
     },
-    Calle: {
+    Apellidos: {
       type: String,
       required: true,
-    },
-    PDF: {
-        type: String,
     },
     Usuario: [
       {
@@ -24,8 +21,9 @@ const domicilioSchema = new mongoose.Schema(
   {
     versionKey: false,
   },
+  
 );
 
-const Domicilio = mongoose.model("Domicilio", domicilioSchema);
+const Formulario = mongoose.model("Formulario", formSchema);
 
-module.exports = Domicilio;
+module.exports = Formulario;

@@ -1,50 +1,27 @@
 "use strict";
 
 const Joi = require("joi");
-const ROLES = require("../constants/roles.constants");
 
 /**
- * Esquema de validación para el cuerpo de la solicitud de usuario.
  * @constant {Object}
  */
 const domicilioBodySchema = Joi.object({
-  username: Joi.string().required().messages({
-    "string.empty": "El nombre de usuario no puede estar vacío.",
-    "any.required": "El nombre de usuario es obligatorio.",
-    "string.base": "El nombre de usuario debe ser de tipo string.",
+  Ciudad: Joi.string().required().messages({
+    "string.empty": "La ciudad no puede estar vacia.",
+    "any.required": "La ciudad es obligatoria.",
+    "string.base": "La ciudad debe ser de tipo string.",
   }),
-  password: Joi.string().required().min(5).messages({
-    "string.empty": "La contraseña no puede estar vacía.",
-    "any.required": "La contraseña es obligatoria.",
-    "string.base": "La contraseña debe ser de tipo string.",
-    "string.min": "La contraseña debe tener al menos 5 caracteres.",
-  }),
-  email: Joi.string().email().required().messages({
-    "string.empty": "El email no puede estar vacío.",
-    "any.required": "El email es obligatorio.",
-    "string.base": "El email debe ser de tipo string.",
-    "string.email": "El email debe tener un formato válido.",
-  }),
-  roles: Joi.array()
-    .items(Joi.string().valid(...ROLES))
-    .required()
-    .messages({
-      "array.base": "El rol debe ser de tipo array.",
-      "any.required": "El rol es obligatorio.",
-      "string.base": "El rol debe ser de tipo string.",
-      "any.only": "El rol proporcionado no es válido.",
-    }),
-  newPassword: Joi.string().min(5).messages({
-    "string.empty": "La contraseña no puede estar vacía.",
-    "string.base": "La contraseña debe ser de tipo string.",
-    "string.min": "La contraseña debe tener al menos 5 caracteres.",
+  Calle: Joi.string().required().messages({
+    "string.empty": "La calle no puede estar vacía.",
+    "any.required": "La calle es obligatoria.",
+    "string.base": "La calle debe ser de tipo string.",
+    "string.min": "La calle debe tener al menos 5 caracteres.",
   }),
 }).messages({
-  "object.unknown": "No se permiten propiedades adicionales.",
+  "object.unknown": "No se permiten atributos adicionales.",
 });
 
 /**
- * Esquema de validación para el id de usuario.
  * @constant {Object}
  */
 const domicilioIdSchema = Joi.object({

@@ -39,6 +39,12 @@ const userSchema = new mongoose.Schema(
         ref: "Domicilio",
       },
     ],
+    Formulario: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Formulario",
+      },
+    ],
   },
   {
     versionKey: false,
