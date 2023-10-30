@@ -1,7 +1,6 @@
 "use-strict";
 
 const DomicilioService = require("../services/domicilio.service");
-const UsuarioService = require("../services/user.service");
 const { handleError } = require("../utils/errorHandler");
 const { domicilioBodySchema, domicilioIdSchema } = require("../schema/domicilio.schema");
 const { respondSuccess, respondError } = require("../utils/resHandler");
