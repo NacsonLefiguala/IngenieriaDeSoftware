@@ -2,14 +2,12 @@ const express = require("express");
 const inspectionRoutes = require("./inspection.routes.js");
 const userRoutes = require("./user.routes.js");
 const authRoutes = require("./auth.routes.js");
-<<<<<<< HEAD
+
 
 /** Enrutador de citas */
 const meetRoutes = require("./meet.routes.js"); 
 
 /** Middleware de autenticación */
-=======
->>>>>>> Nacson
 const authenticationMiddleware = require("../middlewares/authentication.middleware.js");
 
 const router = express.Router();
