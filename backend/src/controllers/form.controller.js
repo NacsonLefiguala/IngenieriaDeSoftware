@@ -40,15 +40,40 @@ async function createFormulario(req, res) {
  */
 async function getFormularios(req, res) {
   try {
-    const [formularios, errorFormularios] = await FormService.getFormularios();
-    if (errorFormularios) return respondError(req, res, 404, errorFormularios);
 
-    formularios.length === 0
-      ? respondSuccess(req, res, 204)
-      : respondSuccess(req, res, 200, formularios);
+    const { formularioId } = req.params;
+    const  formularios  = await Formulario.find({formulario: formularioId});
+
+    respondSuccess(req, res, 201, formularios);
+    //return res.status(200).json(inspections);
   } catch (error) {
     handleError(error, "form.controller -> getFormularios");
-    respondError(req, res, 400, error.message);
+    respondError(req, res, 500, "Error al obtener las inspecciones del inspector.");
+  }
+}
+
+async function updateForm(req, res) {
+  try {
+    console.log("Cuerpo de la solicitud:", req.body);
+    const { formularioId } = req.params; // Usar req.params para obtener el _id
+    const { Nombres, Apellidos } = req.body; // Obtener observaciones desde el cuerpo de la solicitud
+
+    // Buscar la inspección por el _id y actualizar las observaciones
+    const formulario = await Formulario.findOneAndUpdate(
+      { _id: formularioId },
+      { Nombres, Apellidos },
+      { new: true }
+    );
+
+    if (!formulario) {
+      return res.status(404).json({ error: "Formulario no encontrada." });
+    }
+    respondSuccess(req, res, 201, formulario);
+    
+  } catch (error) {
+    
+    console.error(error);
+    return res.status(500).json({ error: "Error al agregar nombre." });
   }
 }
 
@@ -75,9 +100,10 @@ async function getFormById(req, res) {
   }
 }
 
+
 module.exports = {
   createFormulario,
   getFormularios,
   getFormById,
+  updateForm,
 };
-

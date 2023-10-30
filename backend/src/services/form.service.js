@@ -24,16 +24,36 @@ async function createFormulario(Nombres, Apellidos, usuarioId) {
  * Obtiene todos los formularios
  * @returns {Promise} Promesa con el objeto de los formularios
  */
-async function getFormularios() {
+async function getFormularios(formularioId) {
   try {
-    const formularios = await Formulario.find();
-    if (!formularios) return [null, "No hay formularios"];
+    // Busca todas las inspecciones que tienen el inspectorId proporcionado
+    const formularios = await Formulario.find({ formulario: formularioId });
 
-    return [formularios, null];
+    return formularios;
   } catch (error) {
-    handleError(error, "form.service -> getFormularios");
+    throw error;
   }
 }
+
+async function updateForm(formularioId, Nombres, Apellidos) {
+  try {
+    const formulario = await Formulario.findOneAndUpdate(
+      { _id: formularioId },
+      { Nombres, Apellidos },
+      { new: true }
+    );
+
+    if (!formulario) {
+      throw new Error("InspecciÃ³n no encontrada.");
+    }
+
+    return formulario;
+  } catch (error) {
+    throw error;
+  }
+}
+
+
 /**
  * Obtiene un formulario por su ID y su formulario asociado de la base de datos
  * @param {string} id - ID del formulario
@@ -53,5 +73,5 @@ module.exports = {
   createFormulario,
   getFormularios,
   getFormById,
+  updateForm,
 };
-

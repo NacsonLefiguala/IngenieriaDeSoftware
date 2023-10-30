@@ -40,26 +40,6 @@ async function createDomicilio(req, res) {
 }
 
 /**
- * Obtiene todos los domicilios
- * @param {Object} req - Objeto de petición
- * @param {Object} res - Objeto de respuesta
- */
-async function getDomicilios(req, res) {
-  try {
-    const userId = req.params.userId; // ID del usuario
-    const domicilios = await UsuarioService.obtenerDomiciliosDeUsuario(userId);
-
-    if (domicilios.length === 0) {
-      res.status(204).json({ message: "El usuario no tiene domicilios asociados" });
-    } else {
-      res.status(200).json(domicilios);
-    }
-  } catch (error) {
-    res.status(500).json({ error: "Error en el servidor" });
-  }
-}
-
-/**
  * actualiza un domicilio por su id
  * @param {Object} req - Objeto de petición
  * @param {Object} res - Objeto de respuesta
@@ -121,8 +101,6 @@ async function uploadPDF(req, res) {
 
 module.exports = {
     createDomicilio,
-    getDomicilios,
     updateDomicilio,
     uploadPDF,
 };
-
