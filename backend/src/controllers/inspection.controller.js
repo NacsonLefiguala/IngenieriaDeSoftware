@@ -1,17 +1,28 @@
-// controlador de inspecciones (inspection.controller.js)
+
 const Inspection = require("../models/inspection.model");
 const mongoose = require("mongoose");
 const { handleError } = require("../utils/errorHandler");
 const { respondSuccess, respondError } = require("../utils/resHandler");
 const multer = require("multer");
+const { inspectionBodySchema } = require("../schema/inspection.schema");
+const uploadMiddleware = require("../middlewares/archivo.middleware");
 
 
 // Función para crear una nueva inspección y asignarla a un inspector
-// inspection.controller.js
-
 async function createInspection(req, res) {
   try {
     const { lugar, fecha, observaciones, inspectorId } = req.body;
+
+    // Validar los datos usando el esquema de validación
+    const { error } = inspectionBodySchema.validate({
+      lugar,
+      fecha,
+      observaciones,
+    });
+
+    if (error) {
+      return respondError(req, res, 400, error.message);
+    }
 
     // Crear una nueva inspección
     const inspection = new Inspection({
@@ -27,9 +38,7 @@ async function createInspection(req, res) {
     // Mostrar el ID de la inspección en la consola
     console.log('ID de la inspección guardada:', inspeccionGuardada._id);
 
-    
-  
-    return res.status(201).json(inspeccionGuardada);
+    respondSuccess(req, res, 201, inspeccionGuardada);
   } catch (error) {
     console.error(error);
     return res.status(500).json({ error: "Error al crear la inspección." });
@@ -37,10 +46,11 @@ async function createInspection(req, res) {
 }
 
 
+
 async function addObservations(req, res) {
   try {
     console.log("Cuerpo de la solicitud:", req.body);
-    const { inspectionId } = req.params; // Usar req.params.inspectionId para obtener el _id
+    const { inspectionId } = req.params; // Usar req.params para obtener el _id
     const { observaciones } = req.body; // Obtener observaciones desde el cuerpo de la solicitud
 
     console.log("_id:", inspectionId);
@@ -57,14 +67,15 @@ async function addObservations(req, res) {
     if (!inspection) {
       return res.status(404).json({ error: "Inspección no encontrada." });
     }
-
-    return res.status(200).json(inspection);
+    respondSuccess(req, res, 201, inspection);
+    //return res.status(200).json(inspection);
   } catch (error) {
+    //handleError(error, "inspection.controller -> addObservations");
+    //respondError(req, res, 500, error.message);
     console.error(error);
     return res.status(500).json({ error: "Error al agregar observaciones." });
   }
 }
-
 
 
 async function changeInspectionStatus(req, res) {
@@ -82,64 +93,58 @@ async function changeInspectionStatus(req, res) {
     if (!inspection) {
       return res.status(404).json({ error: "Inspección no encontrada." });
     }
-
-    return res.status(200).json(inspection);
+    respondSuccess(req, res, 201, inspection);
+    //return res.status(200).json(inspection);
   } catch (error) {
+    //handleError(error, "inspection.controller -> changueInspectionStatus");
+    //respondError(req, res, 500, error.message);
     console.error(error);
     return res.status(500).json({ error: "Error al cambiar el estado de la inspección." });
   }
 }
-
 
 async function getInspectionsByInspectorId(req, res) {
   try {
     const { inspectorId } = req.params;
 
     // Llama a la función del servicio para obtener inspecciones por el inspectorId
-    const inspections = await Inspection.find({ inspector: inspectorId });
+    const inspection = await Inspection.find({ inspector: inspectorId });
 
     // Devuelve las inspecciones como respuesta
-    return res.status(200).json(inspections);
+    respondSuccess(req, res, 201, inspection);
+    //return res.status(200).json(inspections);
   } catch (error) {
-    console.error(error);
-    return res.status(500).json({ error: "Error al obtener las inspecciones del inspector." });
+    handleError(error, "inspection.controller -> getInspectionsByInspectorId");
+    respondError(req, res, 500, "Error al obtener las inspecciones del inspector.");
+    //console.error(error);
+    //return res.status(500).json({ error: "Error al obtener las inspecciones del inspector." });
   }
 }
 
-// Configuracion de donde se almacenarán los archivos .jpg
-const storage = multer.diskStorage({
-  destination: async function (req, file, cb) {
-    cb(null, "uploads/"); // Carpeta donde se almacenarán los archivos
-  },
-  filename: async function (req, file, cb) {
-    cb(null, Date.now() + "-" + file.originalname);
-  },
-}); 
-
-const upload = multer({ storage: storage });
-
-//función para cargar archivos .jpg
 async function uploadJPG(req, res) {
   try {
-    upload.single("jpgFile")(req, res, async function (err) {
-      if (err instanceof multer.MulterError) {
+    uploadMiddleware()(req, res, async function (err) {
+      if (err) {
         return res.status(400).json({ error: "Error al cargar el archivo." });
-      } else if (err) {
-        return res.status(500).json({ error: "Error interno del servidor." });
       }
 
-      const { inspectionId } = req.params;
-      const archivoJPG = req.file.filename; // Nombre del archivo guardado
+      const { inspectionId } = req.params; // Obtén el _id de la observación desde los parámetros
+      const archivoJPG = req.body.fileName; // Obtén el nombre del archivo desde el cuerpo de la solicitud
 
-      // Llama a la función del servicio para actualizar la inspección con el archivo .jpg
-      const inspection = await Inspection.findOneAndUpdate(
+      const inspection = await Inspection.findByIdAndUpdate(
         { _id: inspectionId },
         { archivoJPG },
         { new: true }
       );
-      
 
-      return res.status(200).json(inspection);
+      if (!inspection) {
+        return res.status(404).json({ error: "inspecion no encontrada." });
+      }
+
+      return res.status(200).json({
+        message: "Archivo subido y asociado a la inspecion.",
+        updatedObservation: inspection,
+      });
     });
   } catch (error) {
     console.error(error);

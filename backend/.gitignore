@@ -1,5 +1,6 @@
 # Project
 .env
+uploads
 #Node
 node_modules
 
