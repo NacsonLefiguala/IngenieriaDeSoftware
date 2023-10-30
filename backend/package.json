@@ -2,11 +2,8 @@
   "name": "api-node",
   "version": "1.0.0",
   "description": "API con Node",
-<<<<<<< HEAD
-  "main": "src/server.js",
-=======
   "main": "server.js",
->>>>>>> Nacson
+  "main": "src/server.js",
   "scripts": {
     "dev": "nodemon src/server.js"
   },
@@ -27,11 +24,9 @@
     "jsonwebtoken": "9.0.2",
     "mongoose": "7.5.2",
     "morgan": "1.10.0",
-<<<<<<< HEAD
     "nodemailer": "^6.9.7"
-=======
     "multer": "^1.4.5-lts.1"
->>>>>>> Nacson
+
   },
   "devDependencies": {
     "eslint": "8.50.0",
