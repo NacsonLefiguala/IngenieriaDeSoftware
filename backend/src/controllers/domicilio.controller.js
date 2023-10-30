@@ -1,7 +1,6 @@
 "use-strict";
 
 const DomicilioService = require("../services/domicilio.service");
-const UsuarioService = require("../services/user.service");
 const { handleError } = require("../utils/errorHandler");
 const { domicilioBodySchema, domicilioIdSchema } = require("../schema/domicilio.schema");
 const { respondSuccess, respondError } = require("../utils/resHandler");
@@ -36,26 +35,6 @@ async function createDomicilio(req, res) {
   } catch (error) {
     console.error(error);
     return res.status(500).json({ error: "Error al crear el domicilio." });
-  }
-}
-
-/**
- * Obtiene todos los domicilios
- * @param {Object} req - Objeto de petición
- * @param {Object} res - Objeto de respuesta
- */
-async function getDomicilios(req, res) {
-  try {
-    const userId = req.params.userId; // ID del usuario
-    const domicilios = await UsuarioService.obtenerDomiciliosDeUsuario(userId);
-
-    if (domicilios.length === 0) {
-      res.status(204).json({ message: "El usuario no tiene domicilios asociados" });
-    } else {
-      res.status(200).json(domicilios);
-    }
-  } catch (error) {
-    res.status(500).json({ error: "Error en el servidor" });
   }
 }
 
@@ -121,8 +100,6 @@ async function uploadPDF(req, res) {
 
 module.exports = {
     createDomicilio,
-    getDomicilios,
     updateDomicilio,
     uploadPDF,
 };
-

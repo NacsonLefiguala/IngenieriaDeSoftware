@@ -6,7 +6,6 @@ const domiciliocontroller = require("../controllers/domicilio.controller");
 const upload = require("../middlewares/pdf.middleware");
 const router = express.Router();
 
-router.get("/", domiciliocontroller.getDomicilios);
 router.post("/", (req, res) => {
     domiciliocontroller.createDomicilio(req, res);
   });

@@ -24,31 +24,7 @@ async function createDomicilio(Ciudad, Calle, PDF, usuarioId) {
 
 
 /**
- * Obtiene domicilios por id de usuario
- * @param {Object} req - Objeto de petición
- * @param {Object} res - Objeto de respuesta
- */
-async function getDomiciliosUser(id) {
-  try {
-    // Busca un usuario por su ID
-    const user = await User.findById(id);
-
-    if (!user) return [null, "Usuario no encontrado"];
-
-    // Luego, busca los domicilios asociados a ese usuario
-    const domicilios = await Domicilio.find({ _id: { $in: user.Domicilios } });
-
-    if (!domicilios) return [null, "No hay domicilios asociados a este usuario"];
-
-    return [domicilios, null];
-  } catch (error) {
-    handleError(error, "domicilio.service -> getDomiciliosUser");
-  }
-}
-
-
-/**
- * @param {Object} req - Objeto de petición
+ * @param {Object} req - Objeto de petici贸n
  * @param {Object} res - Objeto de respuesta
  */
 async function updateDomicilio(id, domicilio) {
@@ -74,12 +50,12 @@ async function updateDomicilio(id, domicilio) {
 }
 
 /**
- * @param {Object} id - Objeto de petición
+ * @param {Object} id - Objeto de petici贸n
  * @param {Object}
  */
 async function upload(domicilioId, pdf) {
   try {
-    // Buscar la inspección por el ID y actualizar el campo archivoJPG
+    // Buscar la inspecci贸n por el ID y actualizar el campo archivoJPG
     const domicilio = await Domicilio.findByIdAndUpdate(
       { _id: domicilioId },
       { pdf },
@@ -87,7 +63,7 @@ async function upload(domicilioId, pdf) {
     );
 
     if (!domicilio) {
-      throw new Error("Inspección no encontrada.");
+      throw new Error("Inspecci贸n no encontrada.");
     }
 
     return domicilio;
@@ -98,7 +74,6 @@ async function upload(domicilioId, pdf) {
 
 module.exports = {
     createDomicilio,
-    getDomiciliosUser,
     updateDomicilio,
     upload,
 };
