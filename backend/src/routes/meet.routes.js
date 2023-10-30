@@ -8,10 +8,12 @@ const meetController = require("../controllers/meet.controller.js");
 /** Instancia del enrutador */
 const router = express.Router();
 
-// Define las rutas para la autenticación
+// Define las rutas para las citas
 router.get("/", meetController.getMeet);
 router.get("/:id", meetController.getMeetById);
+router.get("/user/:id", meetController.getMeetByUser);
 router.post("/", meetController.postMeet);
+router.delete("/:id", meetController.deleteMeet);
 
 // Exporta el enrutador
 module.exports = router;

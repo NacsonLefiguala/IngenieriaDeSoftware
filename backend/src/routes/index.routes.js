@@ -24,6 +24,5 @@ router.use("/auth", authRoutes);
 // Define las rutas para las citas /api/meets
 router.use("/meet", meetRoutes);
 
-
 // Exporta el enrutador
 module.exports = router;

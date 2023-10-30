@@ -6,25 +6,29 @@ const mongoose = require("mongoose");
 // Crea el esquema de la coleccion 'roles'
 const meetSchema = new mongoose.Schema(
   {
-    user: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "User",
-    },
     date: {
         type: String,
         required: true,
     },
-
+    hour: {
+        type: String,
+        required: true,
+    },
     motive: {
         type: String,
         required: true,
     },
-
-    notes: {
-        type: String,
+    state: {
+      type: String,
+      required: true,
+      enum: ["Pendiente", "Confirmado", "Cancelado"],
+      default: "Pendiente",
+    },
+    user: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "User",
         required: true,
     },
-
     regist: {
       type: Date,
       required: Date.now,

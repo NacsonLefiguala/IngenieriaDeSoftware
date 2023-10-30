@@ -20,14 +20,32 @@ const meetBodySchema = Joi.object({
     "string.max": "La fecha debe tener como máximo 10 caracteres.",
     "string.pattern.base": "La fecha proporcionada no es válida.",
   }),
+  hour: Joi.string()
+  .required()
+  .min(5)
+  .max(5)
+  .pattern(/^([89]|1[0-7]):[0-5][0-9]$/)
+  .messages({
+    "string.empty": "La hora no puede estar vacía.",
+    "any.required": "La hora es obligatoria.",
+    "string.base": "La hora debe ser de tipo string.",
+    "string.min": "La hora debe tener al menos 5 caracteres.",
+    "string.max": "La hora debe tener como máximo 5 caracteres.",
+    "string.pattern.base": "La hora proporcionada no es válida.",
+  }),
   motive: Joi.string().required().messages({
     "string.empty": "El motivo no puede estar vacío.",
     "any.required": "El motivo es obligatorio.",
     "string.base": "El motivo debe ser de tipo string.",
   }),
-  notes: Joi.string().messages({
-    "string.empty": "Las notas no pueden estar vacías.",
-    "string.base": "Las notas deben ser de tipo string.",
+  state: Joi.string().required().messages({
+    "string.empty": "El estado no puede estar vacío.",
+    "any.required": "El estado es obligatorio.",
+    "string.base": "El estado debe ser de tipo string.",
+  }),
+  user: Joi.string().messages({
+    "string.empty": "El usuario no puede estar vacío.",
+    "string.base": "El usuario debe ser de tipo string.",
   }),
 }).messages({
   "object.unknown": "No se permiten propiedades adicionales.",

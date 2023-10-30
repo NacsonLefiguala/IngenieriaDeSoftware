@@ -67,8 +67,49 @@ async function postMeet(req, res) {
   }
 }
 
+/**
+ * Encuentra las citas de un usuario
+ * @param {Object} req - Objeto de petición
+ * @param {Object} res - Objeto de respuesta
+ */
+async function getMeetByUser(req, res) {
+  try {
+    const { id } = req.params;
+    const [meets, errorMeets] = await MeetService.getMeetByUser(id);
+    if (errorMeets) return respondError(req, res, 404, errorMeets);
+
+    meets.length === 0
+      ? respondSuccess(req, res, 204)
+      : respondSuccess(req, res, 200, meets);
+  } catch (error) {
+    handleError(error, "meet.controller -> getMeetByUser");
+    respondError(req, res, 400, error.message);
+  }
+}
+
+/**
+ * Elimina una cita
+ * @param {Object} req - Objeto de petición
+ * @param {Object} res - Objeto de respuesta
+ */
+async function deleteMeet(req, res) {
+  try {
+    const { id } = req.params;
+    const [meet, errorMeet] = await MeetService.deleteMeet(id);
+    if (errorMeet) return respondError(req, res, 404, errorMeet);
+
+    respondSuccess(req, res, 200, meet);
+  } catch (error) {
+    handleError(error, "meet.controller -> deleteMeet");
+    respondError(req, res, 400, error.message);
+  }
+}
+
+
 module.exports = {
     getMeet,
     postMeet,
     getMeetById,
+    getMeetByUser,
+    deleteMeet,
 };
