@@ -13,6 +13,17 @@ const userBodySchema = Joi.object({
     "any.required": "El nombre de usuario es obligatorio.",
     "string.base": "El nombre de usuario debe ser de tipo string.",
   }),
+  rut: Joi.string().allow("").messages({
+    "string.empty": "El rut no puede estar vacío",
+    "any.required": "El rut es obligatorio",
+    "string.base": "El rut debe ser tipo string",
+    "string.min": "El rut no contiene 9 digitos",
+  }),
+  fechaDeNacimiento: Joi.date().allow(null).messages({
+    "string.empty": "Fecha de Nacimiento vació",
+    "any.required": "La Fecha de nacimiento es requerida",
+    "date.base": "La fecha de Nacimiento debe ser tipo Fecha",
+  }),
   password: Joi.string().required().min(5).messages({
     "string.empty": "La contraseña no puede estar vacía.",
     "any.required": "La contraseña es obligatoria.",
@@ -40,7 +51,7 @@ const userBodySchema = Joi.object({
     "string.min": "La contraseña debe tener al menos 5 caracteres.",
   }),
 }).messages({
-  "object.unknown": "No se permiten propiedades adicionales.",
+  "object.unknown": "No se permiten atributos adicionales.",
 });
 
 /**
