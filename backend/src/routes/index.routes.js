@@ -2,12 +2,22 @@ const express = require("express");
 const inspectionRoutes = require("./inspection.routes.js");
 const userRoutes = require("./user.routes.js");
 const authRoutes = require("./auth.routes.js");
+<<<<<<< HEAD
+
+/** Enrutador de citas */
+const meetRoutes = require("./meet.routes.js"); 
+
+/** Middleware de autenticación */
+=======
+>>>>>>> Nacson
 const authenticationMiddleware = require("../middlewares/authentication.middleware.js");
 
 const router = express.Router();
 
 router.use("/users", authenticationMiddleware, userRoutes);
 router.use("/auth", authRoutes);
+// Define las rutas para las citas /api/meets
+router.use("/meet", meetRoutes);
 
 // Aplica el middleware de autenticación a las rutas "/inspections" y "/observations"
 router.use(["/inspections", "/observations"], authenticationMiddleware);
