@@ -1,5 +1,9 @@
 # Project
 .env
+pdfs/*
+uploads/*
+pdfs
+uploads
 #Node
 # See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
 

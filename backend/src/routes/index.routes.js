@@ -1,28 +1,38 @@
-"use strict";
-// Importa el modulo 'express' para crear las rutas
 const express = require("express");
-
-/** Enrutador de usuarios  */
+const inspectionRoutes = require("./inspection.routes.js");
 const userRoutes = require("./user.routes.js");
-
-/** Enrutador de autenticación */
 const authRoutes = require("./auth.routes.js");
+<<<<<<< HEAD
 
 /** Enrutador de citas */
 const meetRoutes = require("./meet.routes.js"); 
 
 /** Middleware de autenticación */
+=======
+>>>>>>> Nacson
 const authenticationMiddleware = require("../middlewares/authentication.middleware.js");
 
-/** Instancia del enrutador */
 const router = express.Router();
 
-// Define las rutas para los usuarios /api/usuarios
 router.use("/users", authenticationMiddleware, userRoutes);
-// Define las rutas para la autenticación /api/auth
 router.use("/auth", authRoutes);
 // Define las rutas para las citas /api/meets
 router.use("/meet", meetRoutes);
 
-// Exporta el enrutador
+// Aplica el middleware de autenticación a las rutas "/inspections" y "/observations"
+router.use(["/inspections", "/observations"], authenticationMiddleware);
+
+router.use("/inspections", (req, res, next) => {
+  console.log(`Solicitud a la ruta /inspections${req.url}`);
+  next();
+}, inspectionRoutes);
+
+router.use("/observations", (req, res, next) => {
+  console.log(`Solicitud a la ruta /observations${req.url}`);
+  next();
+}, inspectionRoutes);
+
 module.exports = router;
+
+
+

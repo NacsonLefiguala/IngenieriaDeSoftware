@@ -59,7 +59,7 @@ async function getUserById(req, res) {
     const { params } = req;
     const { error: paramsError } = userIdSchema.validate(params);
     if (paramsError) return respondError(req, res, 400, paramsError.message);
-
+    
     const [user, errorUser] = await UserService.getUserById(params.id);
 
     if (errorUser) return respondError(req, res, 404, errorUser);
