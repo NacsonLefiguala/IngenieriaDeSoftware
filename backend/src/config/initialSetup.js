@@ -1,6 +1,6 @@
 "use strict";
 // Importa el modelo de datos 'Role'
-const Role = require("../models/role.model.js");
+const Role = require("../models/role.model");
 const User = require("../models/user.model.js");
 
 /**
