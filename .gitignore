@@ -1,6 +1,9 @@
 # Project
 .env
+pdfs/*
 uploads/*
+pdfs
+uploads
 #Node
 node_modules
 

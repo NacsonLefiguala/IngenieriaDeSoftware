@@ -5,26 +5,20 @@ const Formulario = require("../models/form.model");
  * @param {Object} formulario - Objeto de formulario a crear
  * @returns {Promise}
  */
-async function createFormulario(formulario) {
-    try {
-      const { Nombres, Apellidos, Usuario } = formulario;
-      const formularioFound = await Formulario.findOne({ Nombres: formulario.Nombres });
-      if (formularioFound) {
-        return [null, "El formulario ya existe"];
-      }
-      const newFormulario = new Formulario({
-        Nombres,
-        Apellidos,
-        Usuario,
-      });
-      await newFormulario.save();
-      // Devuelve el nuevo formulario y nulo para indicar que no hay errores.
-      return [newFormulario, null];
-    } catch (error) {
-      // Manejo de errores: Registra el error y devuelve un arreglo con objeto nulo y el error.
-      handleError(error, "form.service -> createFormulario");
-      return [null, error];
-    }
+async function createFormulario(Nombres, Apellidos, usuarioId) {
+  try {
+    const formulario = new Formulario({
+      Nombres,
+      Apellidos,
+      Usuario: usuarioId,
+    });
+
+    await formulario.save();
+
+    return formulario;
+  } catch (error) {
+    throw error;
+  }
 }
 /**
  * Obtiene todos los formularios

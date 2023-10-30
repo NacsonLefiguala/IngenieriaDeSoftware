@@ -20,7 +20,7 @@ const formsRoutes = require("./form.routes.js");
 router.use(authenticationMiddleware);
 
 // Define las rutas para los usuarios
-router.get("/", usuarioController.getUsers); // !Al ser usuario puede mostrar admin e inspector :/
+router.get("/", authorizationMiddleware.isAdmin, usuarioController.getUsers);
 router.post("/", authorizationMiddleware.isAdmin, usuarioController.createUser);
 router.get("/:id", usuarioController.getUserById); // ?Puede acceder un usuario al de otro
 router.put(

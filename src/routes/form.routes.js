@@ -11,7 +11,9 @@ const router = express.Router();
 const domicilioRoutes = require("./domicilio.routes");
 
 router.use("/:form/domicilios", domicilioRoutes);// ?usuario accede a un formulario que no es suyo?
-router.post("/", formController.createFormulario);
+router.post("/", (req, res) => {
+    formController.createFormulario(req, res);
+  });
 router.get("/", authorizationMiddleware.isAdmin, formController.getFormularios);
 router.get("/:id", formController.getFormById);// ?usuario accede a un formulario que no es suyo?
 

@@ -5,34 +5,39 @@ const UsuarioService = require("../services/user.service");
 const { handleError } = require("../utils/errorHandler");
 const { domicilioBodySchema, domicilioIdSchema } = require("../schema/domicilio.schema");
 const { respondSuccess, respondError } = require("../utils/resHandler");
-const multer = require("multer");
+const Domicilio = require("../models/domicilio.model");
+const uploadMiddleware = require("../middlewares/pdf.middleware");
 
 /**
- * Crea un nuevo domicilio
+ * crea domicilio
  * @param {Object} req - Objeto de petición
  * @param {Object} res - Objeto de respuesta
  */
 async function createDomicilio(req, res) {
-    try {
-      const { body } = req;
-      // Validar el cuerpo de la solicitud
-      const { error: bodyError } = domicilioBodySchema.validate(body);
-      if (bodyError) return respondError(req, res, 400, bodyError.message);
-  
-      // Crear el nuevo domicilio
-      const { domicilioError, nuevoDomicilio } = await DomicilioService.createDomicilio(body);
-  
-      if (domicilioError) return respondError(req, res, 400, domicilioError);
-      if (!nuevoDomicilio) {
-        return respondError(req, res, 400, "No se pudo crear el domicilio");
-      }
-  
-      respondSuccess(req, res, 201, nuevoDomicilio);
-    } catch (error) {
-      handleError(error, "domicilio.controller -> createDomicilio");
-      respondError(req, res, 500, "No se creo el domicilio");
-    }
+  try {
+    const { Ciudad, Calle, PDF, Usuario } = req.body;
+
+
+    // Crear una nueva inspección
+    const domicilio = new Domicilio({
+      Ciudad,
+      Calle,
+      PDF,
+      Usuario,
+    });
+
+    // Guardar la inspección en la base de datos
+    const domicilioGuardada = await domicilio.save();
+
+    // Mostrar el ID de la inspección en la consola
+    console.log("ID de la inspección guardada:", domicilioGuardada._id);
+
+    respondSuccess(req, res, 201, domicilioGuardada);
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ error: "Error al crear el domicilio." });
   }
+}
 
 /**
  * Obtiene todos los domicilios
@@ -79,55 +84,38 @@ async function updateDomicilio(req, res) {
   }
 }
 
-
-// Configuracion de donde se almacenarán los archivos .jpg
-const storage = multer.diskStorage({
-  /**
+/**
  * @param {Object} req - Objeto de petición
  * @param {Object} res - Objeto de respuesta
  */
-  destination: async function(req, file, cb) {
-    cb(null, "../uploads"); // Carpeta donde se almacenarán los archivos
-  },
-  /**
- * @param {Object} req - Objeto de petición
- * @param {Object} res - Objeto de respuesta
- */
-  filename: async function(req, file, cb) {
-    cb(null, Date.now() + "-" + file.originalname);
-  },
-});
-
-const upload = multer({ storage: storage });
-
-/** función para cargar archivos .jpg
-* Agregar una nueva función para cargar archivos .jpg
-*/
 async function uploadPDF(req, res) {
   try {
-    upload.single("pdfFile")(req, res, async function(err) {
-      if (err instanceof multer.MulterError) {
-        respondError(req, res, 400, "No se pudo cargar el archivo");
-      } else if (err) {
-        respondError(req, res, 500, "No se pudo crear el archivo");
+    uploadMiddleware(req, res, async function(err) {
+      if (err) {
+        return res.status(400).json({ error: "Error al cargar el pdf." });
       }
 
       const { domicilioId } = req.params;
-      const archivo = req.file.filename; // Nombre del archivo guardado
+      const pdf = req.body.fileName;
 
-      // Llama a la función del servicio para actualizar la inspección con el archivo .jpg
-      const inspection = await Inspection.findOneAndUpdate(
+      const upload = await Domicilio.findByIdAndUpdate(
         { _id: domicilioId },
-        { archivo },
+        { pdf },
         { new: true },
       );
 
+      if (!upload) {
+        return res.status(404).json({ error: "inspecion no encontrada." });
+      }
 
-      return res.status(200).json(inspection);
+      return res.status(200).json({
+        message: "Archivo subido y asociado a la domicilio.",
+        updatedPDF: pdf,
+      });
     });
   } catch (error) {
     console.error(error);
-    return res.status(500).json({ error: "Error al cargar el archivo .jpg." });
+    return res.status(500).json({ error: "Error al cargar pdf." });
   }
 }
 

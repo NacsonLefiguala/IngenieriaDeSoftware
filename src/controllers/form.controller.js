@@ -1,31 +1,35 @@
 "use strict";
 
+const Formulario = require("../models/form.model");
 const FormService = require("../services/form.service");
 const { handleError } = require("../utils/errorHandler");
 const { respondSuccess, respondError } = require("../utils/resHandler");
-const { formularioBodySchema } = require("../schema/form.schema");
-const { formularioIdSchema } = require("../schema/form.schema");
 /**
  * @param {Object} req - Objeto de petición
  * @param {Object} res - Objeto de respuesta
  */
 async function createFormulario(req, res) {
   try {
-    const { body } = req;
-    const { error: bodyError } = formularioBodySchema.validate(body);
-    if (bodyError) return respondError(req, res, 400, bodyError.message);
+    const { Nombres, Apellidos, Usuario } = req.body;
 
-    const [newForm, formError] = await FormService.createFormulario(body);
 
-    if (formError) return respondError(req, res, 400, formError);
-    if (!newForm) {
-      return respondError(req, res, 400, "No se creó el formulario");
-    }
+    // Crear una nueva inspección
+    const formulario = new Formulario({
+      Nombres,
+      Apellidos,
+      Usuario,
+    });
 
-    respondSuccess(req, res, 201, newForm);
+    // Guardar la inspección en la base de datos
+    const FormGuardada = await formulario.save();
+
+    // Mostrar el ID de la inspección en la consola
+    console.log("ID de formulairo", FormGuardada._id);
+
+    respondSuccess(req, res, 201, FormGuardada);
   } catch (error) {
-    handleError(error, "form.controller -> createFormulario");
-    respondError(req, res, 500, "No se creó el formulario");
+    console.error(error);
+    return res.status(500).json({ error: "Error al crear el formulario." });
   }
 }
 

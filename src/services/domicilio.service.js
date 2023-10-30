@@ -1,31 +1,27 @@
 "use strict";
 
 const { handleError } = require("../utils/errorHandler");
-const Domicilio = require("../models/domicilio.model");
+const Domicilio = require("../models/domicilio.model.js");
 const User = require("../models/user.model.js");
 
-/**
- * Crea un nuevo domicilio
- * @param {Object} req - Objeto de petición
- * @param {Object} res - Objeto de respuesta
- */
-async function createDomicilio(req, res) {
-    try {
-      const { ciudad, calle, user } = req.body;
 
-      const domicilioFound = await domicilio.findOne({ ciudad: domicilio.Ciudad });
-      if (domicilioFound) return [null, "El domicilio ya existe"];
+async function createDomicilio(Ciudad, Calle, PDF, usuarioId) {
+  try {
+    const domicilio = new Domicilio({
+      Ciudad,
+      Calle,
+      PDF,
+      Usuario: usuarioId,
+    });
 
-      const newDomicilio = new Domicilio({
-        ciudad,
-        calle,
-        user,
-      });
-      await newDomicilio.save();
-    } catch (error) {
-      handleError(error, "domicilio.service -> createDomicilio");
-    }
+    await domicilio.save();
+
+    return domicilio;
+  } catch (error) {
+    throw error;
   }
+}
+
 
 /**
  * Obtiene domicilios por id de usuario
@@ -81,19 +77,23 @@ async function updateDomicilio(id, domicilio) {
  * @param {Object} id - Objeto de petición
  * @param {Object}
  */
-async function upload(id, pdf) {
+async function upload(domicilioId, pdf) {
+  try {
     // Buscar la inspección por el ID y actualizar el campo archivoJPG
-    const archivo = await Domicilio.findByIdAndUpdate(
-      { _id: id },
+    const domicilio = await Domicilio.findByIdAndUpdate(
+      { _id: domicilioId },
       { pdf },
       { new: true },
     );
 
-    if (!archivo) {
+    if (!domicilio) {
       throw new Error("Inspección no encontrada.");
     }
 
-    return archivo;
+    return domicilio;
+  } catch (error) {
+    throw error;
+  }
 }
 
 module.exports = {
