@@ -88,6 +88,26 @@ async function getMeetByUser(req, res) {
 }
 
 /**
+ * Actualiza el estado de una cita de la base de datos
+ * @param {String} id Id de la cita
+ * @param {Object} meet Objeto de cita
+ * @returns {Promise} Promesa con el objeto de cita actualizado
+ */
+async function putMeet(req, res) {
+  try {
+    const { id } = req.params;
+    const { body } = req;
+    const [updatedMeet, errorMeet] = await MeetService.putMeet(id, body);
+    if (errorMeet) return respondError(req, res, 404, errorMeet);
+
+    respondSuccess(req, res, 200, updatedMeet);
+  } catch (error) {
+    handleError(error, "meet.controller -> putMeet");
+    respondError(req, res, 400, error.message);
+  }
+}
+
+/**
  * Elimina una cita
  * @param {Object} req - Objeto de petición
  * @param {Object} res - Objeto de respuesta
@@ -112,4 +132,5 @@ module.exports = {
     getMeetById,
     getMeetByUser,
     deleteMeet,
+    putMeet,
 };

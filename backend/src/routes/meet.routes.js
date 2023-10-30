@@ -12,6 +12,7 @@ const router = express.Router();
 router.get("/", meetController.getMeet);
 router.get("/:id", meetController.getMeetById);
 router.get("/user/:id", meetController.getMeetByUser);
+router.put("/:id", meetController.putMeet);
 router.post("/", meetController.postMeet);
 router.delete("/:id", meetController.deleteMeet);
 

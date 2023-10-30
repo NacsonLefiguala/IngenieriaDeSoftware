@@ -101,7 +101,26 @@ async function getMeetByUser(id) {
 }
 
 /**
- * Elimita una cita de la base de datos
+ * Actualiza el estado de una cita de la base de datos
+ * @param {String} id Id de la cita
+ * @param {Object} meet Objeto de cita
+ * @returns {Promise} Promesa con el objeto de cita actualizado
+ */
+async function putMeet(id, meet) {
+  try {
+    const updatedMeet = await Meet.findByIdAndUpdate(id, meet, {
+      new: true,
+    }).exec();
+    if (!updatedMeet) return [null, "No existe la cita"];
+
+    return [updatedMeet, null];
+  } catch (error) {
+    handleError(error, "meet.service -> putMeet");
+  }
+}
+
+/**
+ * Elimina una cita de la base de datos
  * @param {String} id Id de la cita
  * @returns {Promise} Promesa con el objeto de citas
  */
@@ -123,4 +142,5 @@ module.exports = {
     getMeetById,
     getMeetByUser,
     deleteMeet,
+    putMeet,
   };
