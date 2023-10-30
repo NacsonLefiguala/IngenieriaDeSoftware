@@ -31,6 +31,3 @@ router.use("/observations", (req, res, next) => {
 }, inspectionRoutes);
 
 module.exports = router;
-
-
-
